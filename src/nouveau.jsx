@@ -16,7 +16,7 @@ export const T = {
   goldFaint: 'rgba(167,154,94,0.10)',
   teal: '#2E6E6A',
   peacock: '#6FA89F',
-  chartreuse: '#A8B060',
+  chartreuse: '#8FA858',
   red: '#D98873',
 };
 
