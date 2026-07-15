@@ -162,8 +162,8 @@ function ColorWheel({ h, s, onPick }) {
         className="absolute w-4 h-4 rounded-full pointer-events-none"
         style={{
           left: dotX - 8, top: dotY - 8,
-          border: `2px solid ${T.bg}`,
-          boxShadow: '0 0 0 1px rgba(51,64,47,0.7), 0 1px 4px rgba(51,64,47,0.4)',
+          border: `2px solid ${T.ink}`,
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.5)',
         }}
       />
     </div>
@@ -476,7 +476,7 @@ export default function PaletteSwatch({ onBack }) {
               <span
                 onClick={e => { e.stopPropagation(); useEyedropperAt(i); }}
                 className="absolute bottom-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
-                style={{ background: 'rgba(51,64,47,0.55)', color: T.bg, transition: 'opacity 0.15s' }}
+                style={{ background: 'rgba(0,0,0,0.5)', color: T.ink, transition: 'opacity 0.15s' }}
                 title={eyedropperSupported ? "Pick color from screen or photo" : "Pick directly"}
               >
                 <Pipette size={12} />
@@ -493,7 +493,7 @@ export default function PaletteSwatch({ onBack }) {
               <span
                 onClick={e => { e.stopPropagation(); setLocked(l => ({ ...l, [i]: !l[i] })); }}
                 className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ background: locked[i] ? T.gold : 'rgba(51,64,47,0.55)', color: T.bg, opacity: locked[i] ? 1 : 0 }}
+                style={{ background: locked[i] ? T.gold : 'rgba(0,0,0,0.5)', color: locked[i] ? T.bg : T.ink, opacity: locked[i] ? 1 : 0 }}
               >
                 <Lock size={11} />
               </span>
@@ -501,7 +501,7 @@ export default function PaletteSwatch({ onBack }) {
                 <span
                   onClick={e => { e.stopPropagation(); removeSwatch(i); }}
                   className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
-                  style={{ background: 'rgba(51,64,47,0.55)', color: T.bg, transition: 'opacity 0.15s' }}
+                  style={{ background: 'rgba(0,0,0,0.5)', color: T.ink, transition: 'opacity 0.15s' }}
                 >
                   <X size={12} />
                 </span>

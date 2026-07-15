@@ -1,26 +1,26 @@
 import React from 'react';
 
-// ————— Art Nouveau theme: aged parchment, moss ink, antique gold, peacock —————
+// ————— Mucha-dark theme: warm charcoal, candlelit gold, cream ink —————
 export const T = {
-  bg: '#F3ECD9',
-  panel: '#EDE2C7',
-  panelLight: 'rgba(255,252,242,0.72)',
-  ink: '#33402F',
-  inkSoft: 'rgba(51,64,47,0.62)',
-  inkFaint: 'rgba(51,64,47,0.40)',
-  gold: '#8C6A2F',
-  goldBright: '#B08D57',
-  goldLine: 'rgba(140,106,47,0.45)',
-  goldSoft: 'rgba(140,106,47,0.22)',
-  goldFaint: 'rgba(140,106,47,0.10)',
-  peacock: '#1B4B4A',
-  red: '#9A3B2E',
+  bg: '#1C1B1A',
+  panel: '#242118',
+  panelLight: 'rgba(242,237,228,0.07)',
+  ink: '#F2EDE4',
+  inkSoft: 'rgba(242,237,228,0.65)',
+  inkFaint: 'rgba(242,237,228,0.40)',
+  gold: '#B08D57',
+  goldBright: '#D4B37A',
+  goldLine: 'rgba(176,141,87,0.5)',
+  goldSoft: 'rgba(176,141,87,0.25)',
+  goldFaint: 'rgba(176,141,87,0.10)',
+  peacock: '#5FA895',
+  red: '#E08A7D',
 };
 
 export const FONT_DISPLAY = '"Berkshire Swash", "Cormorant Garamond", Georgia, serif';
 export const FONT_BODY = '"Cormorant Garamond", Georgia, "Source Serif Pro", serif';
 
-// Double-frame panel: gold hairline, parchment reveal, inner gold echo
+// Double-frame panel: gold hairline, charcoal reveal, inner gold echo
 export const frame = {
   background: T.panel,
   border: `1px solid ${T.goldLine}`,
@@ -39,12 +39,12 @@ export const inputStyle = {
 export const baseCss = `
   input, textarea { outline: none; }
   input:focus, textarea:focus, button:focus-visible { box-shadow: 0 0 0 2px ${T.goldBright}; }
-  ::placeholder { color: rgba(51,64,47,0.38); opacity: 1; }
-  ::selection { background: rgba(176,141,87,0.35); }
+  ::placeholder { color: rgba(242,237,228,0.35); opacity: 1; }
+  ::selection { background: rgba(176,141,87,0.45); }
   .caption { font-family: ${FONT_BODY}; font-weight: 600; letter-spacing: 0.14em; }
   .display { font-family: ${FONT_DISPLAY}; font-weight: 400; }
   input[type="range"] { -webkit-appearance: none; height: 5px; border-radius: 3px; }
-  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: ${T.bg}; cursor: pointer; border: 2px solid ${T.gold}; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: ${T.ink}; cursor: pointer; border: 2px solid ${T.gold}; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 `;
 
@@ -73,4 +73,50 @@ export function VineRule() {
   );
 }
 
-export const pageBackground = `radial-gradient(ellipse 120% 60% at 50% 0%, rgba(176,141,87,0.14), transparent 65%), ${T.bg}`;
+// Mucha halo: concentric rings + beaded band + cardinal lozenges,
+// meant to sit behind a centered title
+export function Halo({ size = 360 }) {
+  const c = size / 2;
+  const lozenge = (x, y) =>
+    `M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z`;
+  return (
+    <svg
+      width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" aria-hidden="true"
+      style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' }}
+    >
+      <circle cx={c} cy={c} r={c - 30} stroke={T.gold} strokeWidth="1" opacity="0.30" />
+      <circle cx={c} cy={c} r={c - 38} stroke={T.gold} strokeWidth="0.7" opacity="0.18" />
+      <circle cx={c} cy={c} r={c - 58} stroke={T.gold} strokeWidth="1" opacity="0.12" />
+      <circle cx={c} cy={c} r={c - 34} stroke={T.gold} strokeWidth="5" opacity="0.10" strokeDasharray="1 9" />
+      <path d={lozenge(c, 30)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
+      <path d={lozenge(c, size - 30)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
+      <path d={lozenge(30, c)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
+      <path d={lozenge(size - 30, c)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
+    </svg>
+  );
+}
+
+// Spiral curls for the four corners of a panel — the panel must be position:relative
+function Corner({ style }) {
+  return (
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"
+      style={{ position: 'absolute', pointerEvents: 'none', ...style }}>
+      <path d="M24 3 C 12 3, 3 12, 3 24" stroke={T.gold} strokeWidth="1.1" opacity="0.7" />
+      <path d="M17 6 C 10 7, 7 10, 6 17" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
+      <circle cx="9" cy="9" r="1.4" fill={T.gold} opacity="0.7" />
+    </svg>
+  );
+}
+
+export function Corners() {
+  return (
+    <>
+      <Corner style={{ top: 5, left: 5 }} />
+      <Corner style={{ top: 5, right: 5, transform: 'rotate(90deg)' }} />
+      <Corner style={{ bottom: 5, right: 5, transform: 'rotate(180deg)' }} />
+      <Corner style={{ bottom: 5, left: 5, transform: 'rotate(270deg)' }} />
+    </>
+  );
+}
+
+export const pageBackground = `radial-gradient(ellipse 120% 60% at 50% 0%, rgba(176,141,87,0.10), transparent 65%), ${T.bg}`;

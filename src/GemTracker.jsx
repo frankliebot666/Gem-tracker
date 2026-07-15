@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, X, Camera, Trash2, Search, ChevronLeft, Palette } from 'lucide-react';
+import { Plus, X, Camera, Trash2, Search, ChevronLeft, Palette, FlaskConical } from 'lucide-react';
 import PaletteSwatch from './PaletteSwatch.jsx';
-import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule } from './nouveau.jsx';
+import Gemology from './Gemology.jsx';
+import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, Halo, Corners } from './nouveau.jsx';
 
 const MOHS_REF = [
   { n: 1, name: 'Talc' }, { n: 2, name: 'Gypsum' }, { n: 3, name: 'Calcite' },
@@ -9,24 +10,7 @@ const MOHS_REF = [
   { n: 7, name: 'Quartz' }, { n: 8, name: 'Topaz' }, { n: 9, name: 'Corundum' }, { n: 10, name: 'Diamond' }
 ];
 
-const SG_REF = [
-  { name: 'Opal', sg: 2.15 }, { name: 'Amber', sg: 1.08 }, { name: 'Quartz', sg: 2.65 },
-  { name: 'Feldspar (Moonstone)', sg: 2.56 }, { name: 'Beryl (Emerald/Aquamarine)', sg: 2.72 },
-  { name: 'Tourmaline', sg: 3.06 }, { name: 'Spodumene (Kunzite)', sg: 3.18 }, { name: 'Peridot', sg: 3.34 },
-  { name: 'Diamond', sg: 3.52 }, { name: 'Spinel', sg: 3.60 }, { name: 'Topaz', sg: 3.55 },
-  { name: 'Garnet', sg: 3.80 }, { name: 'Corundum (Ruby/Sapphire)', sg: 4.00 },
-  { name: 'Zircon', sg: 4.65 }, { name: 'Hematite', sg: 5.15 }, { name: 'Cassiterite', sg: 6.95 },
-  { name: 'Cerussite', sg: 6.55 }, { name: 'Silver (native)', sg: 10.5 }, { name: 'Gold (native)', sg: 19.3 },
-];
-
-function nearestSgMatches(sg) {
-  if (!sg || isNaN(sg)) return [];
-  return SG_REF
-    .map(r => ({ ...r, diff: Math.abs(r.sg - sg) }))
-    .sort((a, b) => a.diff - b.diff)
-    .slice(0, 3)
-    .filter(r => r.diff < 0.6);
-}
+const UV_INTENSITIES = ['Inert', 'Faint', 'Moderate', 'Strong'];
 
 function hexToHsl(hex) {
   let r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -145,8 +129,8 @@ function ColorWheel({ h, s, onPick }) {
         className="absolute w-4 h-4 rounded-full pointer-events-none"
         style={{
           left: dotX - 8, top: dotY - 8,
-          border: `2px solid ${T.bg}`,
-          boxShadow: '0 0 0 1px rgba(51,64,47,0.7), 0 1px 4px rgba(51,64,47,0.4)',
+          border: `2px solid ${T.ink}`,
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.5)',
         }}
       />
     </div>
@@ -160,7 +144,7 @@ function ColorWheelPopover({ hex, onChange, onClose }) {
       className="absolute z-20 rounded-xl p-4"
       style={{
         ...frame,
-        boxShadow: `inset 0 0 0 3px ${T.bg}, inset 0 0 0 4px ${T.goldSoft}, 0 10px 28px rgba(51,64,47,0.28)`,
+        boxShadow: `inset 0 0 0 3px ${T.bg}, inset 0 0 0 4px ${T.goldSoft}, 0 10px 28px rgba(0,0,0,0.55)`,
         top: '48px', left: 0,
       }}
     >
@@ -182,62 +166,6 @@ function ColorWheelPopover({ hex, onChange, onClose }) {
           style={{ background: `linear-gradient(to right, #000, ${hslToHex(h, s, 50)}, #fff)` }}
         />
       </div>
-    </div>
-  );
-}
-
-function SgTool() {
-  const [dry, setDry] = useState('');
-  const [water, setWater] = useState('');
-  const sg = parseFloat(dry) / parseFloat(water);
-  const valid = dry && water && !isNaN(sg) && isFinite(sg);
-  const matches = valid ? nearestSgMatches(sg) : [];
-
-  return (
-    <div className="rounded-xl p-4 mb-8" style={frame}>
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-1">
-        <p className="caption text-[11px] uppercase" style={{ color: T.gold }}>Specific Gravity — quick check</p>
-        <p className="caption text-[10px]" style={{ color: T.inkFaint }}>more gemology tools soon</p>
-      </div>
-      <div className="flex items-end gap-3">
-        <div className="flex-1">
-          <p className="caption text-[10px]" style={{ color: T.inkSoft, marginBottom: 4 }}>Dry weight (g)</p>
-          <input
-            value={dry}
-            onChange={e => setDry(e.target.value)}
-            placeholder="3.48"
-            inputMode="decimal"
-            className="w-full px-3 py-2 rounded-lg text-sm"
-            style={inputStyle}
-          />
-        </div>
-        <p className="text-sm pb-2" style={{ color: T.inkFaint }}>÷</p>
-        <div className="flex-1">
-          <p className="caption text-[10px]" style={{ color: T.inkSoft, marginBottom: 4 }}>Water displacement (g)</p>
-          <input
-            value={water}
-            onChange={e => setWater(e.target.value)}
-            placeholder="0.49"
-            inputMode="decimal"
-            className="w-full px-3 py-2 rounded-lg text-sm"
-            style={inputStyle}
-          />
-        </div>
-        <div className="pb-2 text-sm" style={{ color: T.inkFaint }}>=</div>
-        <div className="pb-1 min-w-[60px]">
-          <p className="text-xl" style={{ color: valid ? T.gold : T.inkFaint, fontWeight: 600 }}>
-            {valid ? sg.toFixed(2) : '—'}
-          </p>
-        </div>
-      </div>
-      {valid && matches.length > 0 && (
-        <p className="text-sm italic mt-3" style={{ color: T.inkSoft }}>
-          Close to: {matches.map(m => `${m.name} (${m.sg})`).join(', ')}
-        </p>
-      )}
-      {valid && matches.length === 0 && (
-        <p className="text-sm italic mt-3" style={{ color: T.inkFaint }}>No close match in the reference table — worth double-checking the reading.</p>
-      )}
     </div>
   );
 }
@@ -340,6 +268,8 @@ const emptyGem = () => ({
   dims: '',
   origin: '',
   acquired: '',
+  uvIntensity: '',
+  uvColor: '',
   notes: '',
   photos: [],
   createdAt: new Date().toISOString(),
@@ -427,7 +357,7 @@ export default function GemTracker() {
   const filtered = gems.filter(g => {
     const q = query.toLowerCase();
     if (!q) return true;
-    return [g.name, g.species, g.origin, g.notes].join(' ').toLowerCase().includes(q);
+    return [g.name, g.species, g.origin, g.notes, g.uvIntensity, g.uvColor].join(' ').toLowerCase().includes(q);
   });
 
   const label = "caption block text-[11px] uppercase mb-1.5";
@@ -449,24 +379,38 @@ export default function GemTracker() {
         <div className="p-8 text-center italic" style={{ color: T.inkSoft }}>unfurling the ledger…</div>
       ) : view === 'palette' ? (
         <PaletteSwatch onBack={() => setView('grid')} />
+      ) : view === 'gemology' ? (
+        <Gemology onBack={() => setView('grid')} />
       ) : view === 'grid' ? (
         <div className="max-w-5xl mx-auto px-5 py-10">
-          <header className="text-center mb-8">
-            <p className="caption text-[11px] uppercase" style={{ color: T.gold }}>A Collection of Curious Stones</p>
-            <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px' }}>
-              Specimen Ledger
-            </h1>
-            <Flourish />
-            <p className="caption text-[11px] uppercase mt-1" style={{ color: T.inkSoft }}>
-              {gems.length} stone{gems.length === 1 ? '' : 's'} inscribed herein
-            </p>
-            <button
-              onClick={() => setView('palette')}
-              className="caption inline-flex items-center gap-1.5 text-[11px] uppercase mt-3 underline"
-              style={{ color: T.peacock, textUnderlineOffset: 3 }}
-            >
-              <Palette size={13} /> Palette Swatch
-            </button>
+          <header className="relative text-center mb-8" style={{ padding: '38px 0 26px' }}>
+            <Halo />
+            <div className="relative">
+              <p className="caption text-[11px] uppercase" style={{ color: T.gold }}>A Collection of Curious Stones</p>
+              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.goldBright, textShadow: '0 1px 12px rgba(176,141,87,0.25)' }}>
+                Specimen Ledger
+              </h1>
+              <Flourish />
+              <p className="caption text-[11px] uppercase mt-1" style={{ color: T.inkSoft }}>
+                {gems.length} stone{gems.length === 1 ? '' : 's'} inscribed herein
+              </p>
+              <div className="flex justify-center gap-6 mt-3">
+                <button
+                  onClick={() => setView('palette')}
+                  className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
+                  style={{ color: T.peacock, textUnderlineOffset: 3 }}
+                >
+                  <Palette size={13} /> Palette Swatch
+                </button>
+                <button
+                  onClick={() => setView('gemology')}
+                  className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
+                  style={{ color: T.gold, textUnderlineOffset: 3 }}
+                >
+                  <FlaskConical size={13} /> Gemology Bench
+                </button>
+              </div>
+            </div>
           </header>
 
           <div className="flex items-center gap-3 mb-6">
@@ -493,8 +437,6 @@ export default function GemTracker() {
 
           {error && <div className="mb-4 text-sm italic" style={{ color: T.red }}>{error}</div>}
 
-          <SgTool />
-
           {gems.length === 0 ? (
             <div
               className="rounded-xl p-12 text-center mt-4"
@@ -514,9 +456,10 @@ export default function GemTracker() {
                 <button
                   key={g.id}
                   onClick={() => openDetail(g.id)}
-                  className="text-left rounded-xl group p-2"
+                  className="relative text-left rounded-xl group p-2"
                   style={frame}
                 >
+                  <Corners />
                   <div
                     className="h-32 flex items-center justify-center relative overflow-hidden"
                     style={{
@@ -537,7 +480,7 @@ export default function GemTracker() {
                     {g.photos && g.photos.length > 1 && (
                       <span
                         className="caption absolute bottom-1.5 right-3 px-2 py-0.5 rounded-full text-[10px]"
-                        style={{ background: 'rgba(51,64,47,0.65)', color: T.bg }}
+                        style={{ background: 'rgba(0,0,0,0.6)', color: T.ink }}
                       >
                         {g.photos.length}
                       </span>
@@ -565,7 +508,8 @@ export default function GemTracker() {
 
           {(activeGem.photos && activeGem.photos.length) ? (
             <div className="mb-6">
-              <div className="overflow-hidden p-2 rounded-xl" style={frame}>
+              <div className="relative overflow-hidden p-2 rounded-xl" style={frame}>
+                <Corners />
                 <img src={activeGem.photos[0]} alt={activeGem.name} className="w-full h-64 object-cover" style={arch} />
               </div>
               {activeGem.photos.length > 1 && (
@@ -577,7 +521,8 @@ export default function GemTracker() {
               )}
             </div>
           ) : (
-            <div className="rounded-xl overflow-hidden mb-6 p-2" style={frame}>
+            <div className="relative rounded-xl overflow-hidden mb-6 p-2" style={frame}>
+              <Corners />
               <div className="w-full h-40 flex items-center justify-center gap-2" style={{ ...arch, background: T.goldFaint, border: `1px solid ${T.goldLine}` }}>
                 {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
                   <div key={i} className="w-12 h-12 rounded-full" style={{ background: c, border: `1px solid ${T.goldLine}` }} />
@@ -609,12 +554,21 @@ export default function GemTracker() {
             {activeGem.dims && <div><p style={labelStyle} className={label}>Measurements</p><p className="text-base">{activeGem.dims}</p></div>}
             {activeGem.origin && <div><p style={labelStyle} className={label}>Origin</p><p className="text-base">{activeGem.origin}</p></div>}
             {activeGem.acquired && <div><p style={labelStyle} className={label}>Acquired</p><p className="text-base">{activeGem.acquired}</p></div>}
+            {activeGem.uvIntensity && (
+              <div>
+                <p style={labelStyle} className={label}>UV — Longwave</p>
+                <p className="text-base">
+                  {activeGem.uvIntensity}
+                  {activeGem.uvIntensity !== 'Inert' && activeGem.uvColor ? ` — ${activeGem.uvColor}` : ''}
+                </p>
+              </div>
+            )}
           </div>
 
           {activeGem.notes && (
             <div className="mb-8">
               <p style={labelStyle} className={label}>Notes</p>
-              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(51,64,47,0.9)' }}>{activeGem.notes}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(242,237,228,0.9)' }}>{activeGem.notes}</p>
             </div>
           )}
 
@@ -629,7 +583,7 @@ export default function GemTracker() {
             <button
               onClick={() => deleteGem(activeGem.id)}
               className="caption px-5 py-2.5 rounded-full text-[12px] uppercase flex items-center gap-2"
-              style={{ background: 'rgba(154,59,46,0.10)', color: T.red, border: '1px solid rgba(154,59,46,0.35)' }}
+              style={{ background: 'rgba(192,57,43,0.15)', color: T.red, border: '1px solid rgba(192,57,43,0.35)' }}
             >
               <Trash2 size={14} /> Delete
             </button>
@@ -666,7 +620,7 @@ export default function GemTracker() {
                   <button
                     onClick={() => removePhotoAt(i)}
                     className="absolute top-2 right-1/2 translate-x-1/2 w-5 h-5 rounded-full flex items-center justify-center"
-                    style={{ background: 'rgba(51,64,47,0.6)', color: T.bg }}
+                    style={{ background: 'rgba(0,0,0,0.55)', color: T.ink }}
                   >
                     <X size={11} />
                   </button>
@@ -735,6 +689,37 @@ export default function GemTracker() {
             <p style={labelStyle} className={label}>Measurements</p>
             <input value={draft.dims} onChange={e => setDraft(d => ({ ...d, dims: e.target.value }))}
               placeholder="6.5 x 4.8 x 3.1 mm" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
+          </div>
+
+          <div className="mb-5">
+            <p style={labelStyle} className={label}>UV Fluorescence — Longwave (365 nm)</p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {UV_INTENSITIES.map(o => {
+                const active = draft.uvIntensity === o;
+                return (
+                  <button
+                    key={o}
+                    type="button"
+                    onClick={() => setDraft(d => ({ ...d, uvIntensity: active ? '' : o }))}
+                    className="caption px-4 py-1.5 rounded-full text-[11px] uppercase"
+                    style={active
+                      ? { background: T.gold, color: T.bg, border: `1px solid ${T.gold}` }
+                      : { background: T.goldFaint, color: T.inkSoft, border: `1px solid ${T.goldSoft}` }}
+                  >
+                    {o}
+                  </button>
+                );
+              })}
+            </div>
+            {draft.uvIntensity && draft.uvIntensity !== 'Inert' && (
+              <input
+                value={draft.uvColor || ''}
+                onChange={e => setDraft(d => ({ ...d, uvColor: e.target.value }))}
+                placeholder="Response color — e.g. chalky blue, strong red"
+                className="w-full px-3 py-2.5 rounded-lg text-sm"
+                style={inputStyle}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-5">
