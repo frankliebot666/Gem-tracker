@@ -387,7 +387,7 @@ export default function GemTracker() {
             <Halo />
             <div className="relative">
               <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
-              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.goldBright }}>
+              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleGreen }}>
                 Specimen Ledger
               </h1>
               <Flourish />
@@ -568,7 +568,7 @@ export default function GemTracker() {
           {activeGem.notes && (
             <div className="mb-8">
               <p style={labelStyle} className={label}>Notes</p>
-              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(237,234,224,0.9)' }}>{activeGem.notes}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(191,212,203,0.9)' }}>{activeGem.notes}</p>
             </div>
           )}
 

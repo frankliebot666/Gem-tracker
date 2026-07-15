@@ -5,12 +5,15 @@ import React from 'react';
 export const T = {
   bg: '#100E0E',
   panel: '#1B1717',
-  panelLight: 'rgba(237,234,224,0.06)',
-  ink: '#EDEAE0',
-  inkSoft: 'rgba(237,234,224,0.65)',
-  inkFaint: 'rgba(237,234,224,0.40)',
+  panelLight: 'rgba(191,212,203,0.06)',
+  ink: '#BFD4CB',
+  inkSoft: 'rgba(191,212,203,0.65)',
+  inkFaint: 'rgba(191,212,203,0.40)',
   gold: '#A79A5E',
   goldBright: '#C9BC7E',
+  titleGreen: '#B9CD7E',
+  tealLine: 'rgba(111,168,159,0.45)',
+  tealSoft: 'rgba(111,168,159,0.22)',
   goldLine: 'rgba(167,154,94,0.5)',
   goldSoft: 'rgba(167,154,94,0.25)',
   goldFaint: 'rgba(167,154,94,0.10)',
@@ -26,8 +29,8 @@ export const FONT_BODY = '"Cormorant Garamond", Georgia, "Source Serif Pro", ser
 // Double-frame panel: gold hairline, charcoal reveal, inner gold echo
 export const frame = {
   background: T.panel,
-  border: `1px solid ${T.goldLine}`,
-  boxShadow: `inset 0 0 0 3px ${T.bg}, inset 0 0 0 4px ${T.goldSoft}`,
+  border: `1px solid ${T.tealLine}`,
+  boxShadow: `inset 0 0 0 3px ${T.bg}, inset 0 0 0 4px ${T.tealSoft}`,
 };
 
 // Arched "Tiffany window" top for photos and vignettes
