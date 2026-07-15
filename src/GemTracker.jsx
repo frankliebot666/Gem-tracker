@@ -387,7 +387,7 @@ export default function GemTracker() {
             <Halo />
             <div className="relative">
               <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
-              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleGreen }}>
+              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleBlue }}>
                 Specimen Ledger
               </h1>
               <Flourish />

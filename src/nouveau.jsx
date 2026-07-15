@@ -9,14 +9,14 @@ export const T = {
   ink: '#BFD4CB',
   inkSoft: 'rgba(191,212,203,0.65)',
   inkFaint: 'rgba(191,212,203,0.40)',
-  gold: '#A79A5E',
-  goldBright: '#C9BC7E',
-  titleGreen: '#B9CD7E',
+  gold: '#8FA858',
+  goldBright: '#B9CD7E',
+  titleBlue: '#9CCEC4',
   tealLine: 'rgba(111,168,159,0.45)',
   tealSoft: 'rgba(111,168,159,0.22)',
-  goldLine: 'rgba(167,154,94,0.5)',
-  goldSoft: 'rgba(167,154,94,0.25)',
-  goldFaint: 'rgba(167,154,94,0.10)',
+  goldLine: 'rgba(143,168,88,0.5)',
+  goldSoft: 'rgba(143,168,88,0.25)',
+  goldFaint: 'rgba(143,168,88,0.10)',
   teal: '#2E6E6A',
   peacock: '#6FA89F',
   chartreuse: '#8FA858',
@@ -54,62 +54,62 @@ export const baseCss = `
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 `;
 
-// Whiplash-curve flourish with a central lozenge, drawn inline
+// Asymmetric whiplash flourish — a single vine sweeping left to right,
+// budding at its origin, curling into a spiral at its end
 export function Flourish({ width = 260 }) {
   return (
-    <svg width={width} height="26" viewBox="0 0 260 26" fill="none" aria-hidden="true" style={{ maxWidth: '100%', display: 'inline-block' }}>
-      <path d="M6 13 C 46 -4, 88 30, 118 13" stroke={T.gold} strokeWidth="1.1" opacity="0.75" />
-      <path d="M254 13 C 214 -4, 172 30, 142 13" stroke={T.gold} strokeWidth="1.1" opacity="0.75" />
-      <path d="M6 13 C 40 26, 92 2, 118 13" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
-      <path d="M254 13 C 220 26, 168 2, 142 13" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
-      <path d="M130 5 L 137 13 L 130 21 L 123 13 Z" stroke={T.gold} strokeWidth="1.1" fill="none" opacity="0.9" />
-      <circle cx="130" cy="13" r="1.6" fill={T.gold} opacity="0.9" />
-      <circle cx="6" cy="13" r="1.6" fill={T.gold} opacity="0.6" />
-      <circle cx="254" cy="13" r="1.6" fill={T.gold} opacity="0.6" />
+    <svg width={width} height="30" viewBox="0 0 260 30" fill="none" aria-hidden="true" style={{ maxWidth: '100%', display: 'inline-block' }}>
+      <path d="M6 21 C 58 4, 118 27, 166 15 C 194 8, 214 5, 234 10" stroke={T.gold} strokeWidth="1.1" opacity="0.8" />
+      <path d="M234 10 C 250 14, 252 26, 242 28 C 234 29.5, 230 22, 236 18" stroke={T.gold} strokeWidth="1" opacity="0.8" />
+      <path d="M92 17 C 102 6, 117 2, 126 6 C 116 15, 101 20, 92 17 Z" fill={T.gold} opacity="0.28" />
+      <path d="M92 17 C 102 6, 117 2, 126 6" stroke={T.gold} strokeWidth="0.9" opacity="0.6" />
+      <path d="M40 13 C 48 7, 58 5, 64 8" stroke={T.gold} strokeWidth="0.8" opacity="0.45" />
+      <circle cx="6" cy="21" r="2" fill={T.gold} opacity="0.7" />
     </svg>
   );
 }
 
 export function VineRule() {
   return (
-    <svg width="100%" height="14" viewBox="0 0 400 14" preserveAspectRatio="none" fill="none" aria-hidden="true">
-      <path d="M0 7 C 50 -3, 100 17, 150 7 S 250 -3, 300 7 S 380 17, 400 7"
+    <svg width="100%" height="18" viewBox="0 0 400 18" preserveAspectRatio="none" fill="none" aria-hidden="true">
+      <path d="M0 12 C 60 -6, 120 22, 190 9 C 250 -2, 310 18, 400 7"
         stroke={T.gold} strokeWidth="1" opacity="0.35" />
+      <path d="M310 12 C 320 6, 331 4, 338 7 C 330 13, 318 16, 310 12 Z" fill={T.gold} opacity="0.18" />
     </svg>
   );
 }
 
-// Mucha halo: concentric rings + beaded band + cardinal lozenges,
-// meant to sit behind a centered title
+// Halo, loosened: off-beat rings with whiplash tendrils trailing from its
+// lower rim — meant to sit behind a centered title
 export function Halo({ size = 360 }) {
   const c = size / 2;
-  const lozenge = (x, y) =>
-    `M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z`;
   return (
     <svg
       width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" aria-hidden="true"
       style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' }}
     >
       <circle cx={c} cy={c} r={c - 30} stroke={T.gold} strokeWidth="1" opacity="0.30" />
-      <circle cx={c} cy={c} r={c - 38} stroke={T.gold} strokeWidth="0.7" opacity="0.18" />
-      <circle cx={c} cy={c} r={c - 58} stroke={T.gold} strokeWidth="1" opacity="0.12" />
+      <circle cx={c - 4} cy={c + 3} r={c - 40} stroke={T.gold} strokeWidth="0.7" opacity="0.15" />
       <circle cx={c} cy={c} r={c - 34} stroke={T.gold} strokeWidth="5" opacity="0.10" strokeDasharray="1 9" />
-      <path d={lozenge(c, 30)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
-      <path d={lozenge(c, size - 30)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
-      <path d={lozenge(30, c)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
-      <path d={lozenge(size - 30, c)} stroke={T.gold} strokeWidth="1" opacity="0.45" />
+      <path d={`M${c} ${23} C ${c + 9} ${29}, ${c + 5} ${40}, ${c - 3} ${38} C ${c - 9} ${36.5}, ${c - 8} ${28}, ${c} ${23} Z`}
+        stroke={T.gold} strokeWidth="1" opacity="0.5" />
+      <path d={`M${c - (c - 30) * 0.5} ${c + (c - 30) * 0.87} C ${c - (c - 30) * 0.9} ${c + (c - 30) * 1.05}, ${c - (c - 30) * 1.25} ${c + (c - 30) * 0.8}, ${c - (c - 30) * 1.05} ${c + (c - 30) * 0.62}`}
+        stroke={T.gold} strokeWidth="0.9" opacity="0.35" />
+      <path d={`M${c + (c - 30) * 0.64} ${c + (c - 30) * 0.77} C ${c + (c - 30) * 0.92} ${c + (c - 30) * 0.98}, ${c + (c - 30) * 1.12} ${c + (c - 30) * 0.86}, ${c + (c - 30) * 1.02} ${c + (c - 30) * 0.7} C ${c + (c - 30) * 0.96} ${c + (c - 30) * 0.6}, ${c + (c - 30) * 0.86} ${c + (c - 30) * 0.66}, ${c + (c - 30) * 0.9} ${c + (c - 30) * 0.76}`}
+        stroke={T.gold} strokeWidth="0.9" opacity="0.35" />
     </svg>
   );
 }
 
-// Spiral curls for the four corners of a panel — the panel must be position:relative
-function Corner({ style }) {
+// A single vine curl with a leaf — placed asymmetrically (top-left and
+// bottom-right only), the way nouveau framing actually behaves
+function Curl({ style }) {
   return (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"
       style={{ position: 'absolute', pointerEvents: 'none', ...style }}>
-      <path d="M24 3 C 12 3, 3 12, 3 24" stroke={T.gold} strokeWidth="1.1" opacity="0.7" />
-      <path d="M17 6 C 10 7, 7 10, 6 17" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
-      <circle cx="9" cy="9" r="1.4" fill={T.gold} opacity="0.7" />
+      <path d="M32 4 C 16 2, 4 10, 4 26" stroke={T.gold} strokeWidth="1" opacity="0.65" />
+      <path d="M4 26 C 4 31, 9 33, 12 30 C 14.5 27.5, 12 23, 8 25" stroke={T.gold} strokeWidth="0.9" opacity="0.65" />
+      <path d="M14 8 C 19 3, 26 2, 30 5 C 25 10, 18 12, 14 8 Z" fill={T.gold} opacity="0.22" />
     </svg>
   );
 }
@@ -117,10 +117,8 @@ function Corner({ style }) {
 export function Corners() {
   return (
     <>
-      <Corner style={{ top: 5, left: 5 }} />
-      <Corner style={{ top: 5, right: 5, transform: 'rotate(90deg)' }} />
-      <Corner style={{ bottom: 5, right: 5, transform: 'rotate(180deg)' }} />
-      <Corner style={{ bottom: 5, left: 5, transform: 'rotate(270deg)' }} />
+      <Curl style={{ top: 4, left: 4 }} />
+      <Curl style={{ bottom: 4, right: 4, transform: 'rotate(180deg)' }} />
     </>
   );
 }
