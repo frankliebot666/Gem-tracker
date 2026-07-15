@@ -386,8 +386,8 @@ export default function GemTracker() {
           <header className="relative text-center mb-8" style={{ padding: '38px 0 26px' }}>
             <Halo />
             <div className="relative">
-              <p className="caption text-[11px] uppercase" style={{ color: T.gold }}>A Collection of Curious Stones</p>
-              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.goldBright, textShadow: '0 1px 12px rgba(176,141,87,0.25)' }}>
+              <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
+              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.goldBright }}>
                 Specimen Ledger
               </h1>
               <Flourish />
@@ -405,7 +405,7 @@ export default function GemTracker() {
                 <button
                   onClick={() => setView('gemology')}
                   className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
-                  style={{ color: T.gold, textUnderlineOffset: 3 }}
+                  style={{ color: T.chartreuse, textUnderlineOffset: 3 }}
                 >
                   <FlaskConical size={13} /> Gemology Bench
                 </button>
@@ -429,7 +429,7 @@ export default function GemTracker() {
             <button
               onClick={startNew}
               className="caption flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] uppercase shrink-0"
-              style={{ background: T.gold, color: T.bg, border: `1px solid ${T.gold}`, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
+              style={{ background: T.teal, color: T.ink, border: `1px solid ${T.teal}`, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
             >
               <Plus size={15} /> New entry
             </button>
@@ -465,7 +465,7 @@ export default function GemTracker() {
                     style={{
                       ...arch,
                       border: `1px solid ${T.goldLine}`,
-                      background: (g.photos && g.photos.length) ? '#141410' : T.goldFaint,
+                      background: (g.photos && g.photos.length) ? '#0B0909' : T.goldFaint,
                     }}
                   >
                     {(g.photos && g.photos.length) ? (
@@ -568,7 +568,7 @@ export default function GemTracker() {
           {activeGem.notes && (
             <div className="mb-8">
               <p style={labelStyle} className={label}>Notes</p>
-              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(242,237,228,0.9)' }}>{activeGem.notes}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(237,234,224,0.9)' }}>{activeGem.notes}</p>
             </div>
           )}
 
@@ -583,7 +583,7 @@ export default function GemTracker() {
             <button
               onClick={() => deleteGem(activeGem.id)}
               className="caption px-5 py-2.5 rounded-full text-[12px] uppercase flex items-center gap-2"
-              style={{ background: 'rgba(192,57,43,0.15)', color: T.red, border: '1px solid rgba(192,57,43,0.35)' }}
+              style={{ background: 'rgba(217,136,115,0.12)', color: T.red, border: '1px solid rgba(217,136,115,0.35)' }}
             >
               <Trash2 size={14} /> Delete
             </button>
@@ -750,7 +750,7 @@ export default function GemTracker() {
           <button
             onClick={saveDraft}
             className="caption w-full py-3 rounded-full text-[13px] uppercase"
-            style={{ background: T.gold, color: T.bg, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
+            style={{ background: T.teal, color: T.ink, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
           >
             Save specimen
           </button>

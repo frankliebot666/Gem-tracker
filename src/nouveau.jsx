@@ -1,20 +1,23 @@
 import React from 'react';
 
-// ————— Mucha-dark theme: warm charcoal, candlelit gold, cream ink —————
+// ————— Tourmaline palette ("Parlor Jewel" + chartreuse vein), drawn from the
+// indicolite photo: near-black, olive-gold metalwork, deep teal, cream ink —————
 export const T = {
-  bg: '#1C1B1A',
-  panel: '#242118',
-  panelLight: 'rgba(242,237,228,0.07)',
-  ink: '#F2EDE4',
-  inkSoft: 'rgba(242,237,228,0.65)',
-  inkFaint: 'rgba(242,237,228,0.40)',
-  gold: '#B08D57',
-  goldBright: '#D4B37A',
-  goldLine: 'rgba(176,141,87,0.5)',
-  goldSoft: 'rgba(176,141,87,0.25)',
-  goldFaint: 'rgba(176,141,87,0.10)',
-  peacock: '#5FA895',
-  red: '#E08A7D',
+  bg: '#100E0E',
+  panel: '#1B1717',
+  panelLight: 'rgba(237,234,224,0.06)',
+  ink: '#EDEAE0',
+  inkSoft: 'rgba(237,234,224,0.65)',
+  inkFaint: 'rgba(237,234,224,0.40)',
+  gold: '#A79A5E',
+  goldBright: '#C9BC7E',
+  goldLine: 'rgba(167,154,94,0.5)',
+  goldSoft: 'rgba(167,154,94,0.25)',
+  goldFaint: 'rgba(167,154,94,0.10)',
+  teal: '#2E6E6A',
+  peacock: '#6FA89F',
+  chartreuse: '#A8B060',
+  red: '#D98873',
 };
 
 export const FONT_DISPLAY = '"Berkshire Swash", "Cormorant Garamond", Georgia, serif';
@@ -119,4 +122,4 @@ export function Corners() {
   );
 }
 
-export const pageBackground = `radial-gradient(ellipse 120% 60% at 50% 0%, rgba(176,141,87,0.10), transparent 65%), ${T.bg}`;
+export const pageBackground = `radial-gradient(ellipse 120% 60% at 50% 0%, rgba(46,110,106,0.12), transparent 65%), ${T.bg}`;
