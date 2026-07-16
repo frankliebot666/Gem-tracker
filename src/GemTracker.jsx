@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, X, Camera, Trash2, Search, ChevronLeft, Palette, FlaskConical } from 'lucide-react';
 import PaletteSwatch from './PaletteSwatch.jsx';
 import Gemology from './Gemology.jsx';
-import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, Halo, Corners, VineEdge, SpeciesBand, VineSpray } from './nouveau.jsx';
+import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, ArchCrown, Corners, VineEdge, SpeciesBand } from './nouveau.jsx';
 
 const MOHS_REF = [
   { n: 1, name: 'Talc' }, { n: 2, name: 'Gypsum' }, { n: 3, name: 'Calcite' },
@@ -383,10 +383,8 @@ export default function GemTracker() {
         <Gemology onBack={() => setView('grid')} />
       ) : view === 'grid' ? (
         <div className="max-w-5xl mx-auto px-5 py-10">
-          <header className="relative text-center mb-8" style={{ padding: '38px 0 26px' }}>
-            <Halo />
-            <VineSpray style={{ left: '3%', top: 18 }} />
-            <VineSpray style={{ right: '3%', top: 34 }} flip />
+          <header className="relative text-center mb-8" style={{ padding: '46px 0 20px' }}>
+            <ArchCrown />
             <div className="relative">
               <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
               <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleBlue }}>
@@ -407,7 +405,7 @@ export default function GemTracker() {
                 <button
                   onClick={() => setView('gemology')}
                   className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
-                  style={{ color: T.chartreuse, textUnderlineOffset: 3 }}
+                  style={{ color: T.peacock, textUnderlineOffset: 3 }}
                 >
                   <FlaskConical size={13} /> Gemology Bench
                 </button>
@@ -521,6 +519,21 @@ export default function GemTracker() {
                 <VineEdge side="left" />
                 <VineEdge side="right" />
                 <img src={activeGem.photos[0]} alt={activeGem.name} className="w-full h-64 object-cover" style={arch} />
+                <div className="relative text-center pt-4 pb-2 px-8">
+                  <h2 className="display" style={{ fontSize: '2rem', lineHeight: 1.2, color: T.titleBlue }}>{activeGem.name || 'Untitled'}</h2>
+                  {activeGem.species && (
+                    <div className="mt-1">
+                      <SpeciesBand>
+                        <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
+                      </SpeciesBand>
+                    </div>
+                  )}
+                  <div className="flex justify-center -space-x-1.5 mt-3">
+                    {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
+                      <div key={i} className="w-5 h-5 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
+                    ))}
+                  </div>
+                </div>
               </div>
               {activeGem.photos.length > 1 && (
                 <div className="flex gap-2 mt-2 overflow-x-auto pb-1">
@@ -535,32 +548,35 @@ export default function GemTracker() {
               <Corners />
               <VineEdge side="left" />
               <VineEdge side="right" />
-              <div className="w-full h-40 flex items-center justify-center gap-2" style={{ ...arch, background: T.goldFaint, border: `1px solid ${T.goldLine}` }}>
-                {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
-                  <div key={i} className="w-12 h-12 rounded-full" style={{ background: c, border: `1px solid ${T.goldLine}` }} />
-                ))}
+              <div className="w-full h-32 flex items-center justify-center" style={{ ...arch, background: T.goldFaint, border: `1px solid ${T.goldLine}` }}>
+                <svg width="22" height="30" viewBox="0 0 22 30" fill="none" aria-hidden="true">
+                  <path d="M11 2 L 20 15 L 11 28 L 2 15 Z" stroke={T.gold} strokeWidth="1" opacity="0.55" />
+                  <circle cx="11" cy="15" r="1.5" fill={T.gold} opacity="0.6" />
+                </svg>
+              </div>
+              <div className="relative text-center pt-4 pb-2 px-8">
+                <h2 className="display" style={{ fontSize: '2rem', lineHeight: 1.2, color: T.titleBlue }}>{activeGem.name || 'Untitled'}</h2>
+                {activeGem.species && (
+                  <div className="mt-1">
+                    <SpeciesBand>
+                      <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
+                    </SpeciesBand>
+                  </div>
+                )}
+                <div className="flex justify-center -space-x-1.5 mt-3">
+                  {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
+                    <div key={i} className="w-5 h-5 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           <div className="text-center mb-1">
-            <h2 className="display" style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>{activeGem.name || 'Untitled'}</h2>
-            {activeGem.species && (
-              <div className="mt-1">
-                <SpeciesBand>
-                  <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
-                </SpeciesBand>
-              </div>
-            )}
-            <div className="flex justify-center -space-x-1.5 mt-3">
-              {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
-                <div key={i} className="w-6 h-6 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
-              ))}
-            </div>
-            <div className="mt-2 flex justify-center"><Flourish width={200} /></div>
+            <Flourish width={200} />
           </div>
 
-          <div className="mb-6 mt-5">
+          <div className="mb-6 mt-4">
             <p style={labelStyle} className={label}>Hardness</p>
             <HardnessScale value={activeGem.mohs} editable={false} />
             <p className="text-sm italic mt-1.5" style={{ color: T.inkSoft }}>{activeGem.mohs} — {MOHS_REF.find(m => m.n === activeGem.mohs)?.name}</p>
