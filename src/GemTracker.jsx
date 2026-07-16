@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, X, Camera, Trash2, Search, ChevronLeft, Image as ImageIcon } from 'lucide-react';
+import { Plus, X, Camera, Trash2, Search, ChevronLeft, Palette, FlaskConical } from 'lucide-react';
+import PaletteSwatch from './PaletteSwatch.jsx';
+import Gemology from './Gemology.jsx';
+import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, ArchCrown, Corners, VineEdge, SpeciesBand } from './nouveau.jsx';
 
 const MOHS_REF = [
   { n: 1, name: 'Talc' }, { n: 2, name: 'Gypsum' }, { n: 3, name: 'Calcite' },
@@ -7,24 +10,7 @@ const MOHS_REF = [
   { n: 7, name: 'Quartz' }, { n: 8, name: 'Topaz' }, { n: 9, name: 'Corundum' }, { n: 10, name: 'Diamond' }
 ];
 
-const SG_REF = [
-  { name: 'Opal', sg: 2.15 }, { name: 'Amber', sg: 1.08 }, { name: 'Quartz', sg: 2.65 },
-  { name: 'Feldspar (Moonstone)', sg: 2.56 }, { name: 'Beryl (Emerald/Aquamarine)', sg: 2.72 },
-  { name: 'Tourmaline', sg: 3.06 }, { name: 'Spodumene (Kunzite)', sg: 3.18 }, { name: 'Peridot', sg: 3.34 },
-  { name: 'Diamond', sg: 3.52 }, { name: 'Spinel', sg: 3.60 }, { name: 'Topaz', sg: 3.55 },
-  { name: 'Garnet', sg: 3.80 }, { name: 'Corundum (Ruby/Sapphire)', sg: 4.00 },
-  { name: 'Zircon', sg: 4.65 }, { name: 'Hematite', sg: 5.15 }, { name: 'Cassiterite', sg: 6.95 },
-  { name: 'Cerussite', sg: 6.55 }, { name: 'Silver (native)', sg: 10.5 }, { name: 'Gold (native)', sg: 19.3 },
-];
-
-function nearestSgMatches(sg) {
-  if (!sg || isNaN(sg)) return [];
-  return SG_REF
-    .map(r => ({ ...r, diff: Math.abs(r.sg - sg) }))
-    .sort((a, b) => a.diff - b.diff)
-    .slice(0, 3)
-    .filter(r => r.diff < 0.6);
-}
+const UV_INTENSITIES = ['Inert', 'Faint', 'Moderate', 'Strong'];
 
 function hexToHsl(hex) {
   let r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -137,13 +123,13 @@ function ColorWheel({ h, s, onPick }) {
         width={WHEEL_SIZE}
         height={WHEEL_SIZE}
         className="rounded-full cursor-crosshair"
-        style={{ border: '1px solid rgba(242,237,228,0.15)' }}
+        style={{ border: `1px solid ${T.goldLine}` }}
       />
       <div
         className="absolute w-4 h-4 rounded-full pointer-events-none"
         style={{
           left: dotX - 8, top: dotY - 8,
-          border: '2px solid #F2EDE4',
+          border: `2px solid ${T.ink}`,
           boxShadow: '0 0 0 1px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.5)',
         }}
       />
@@ -155,18 +141,22 @@ function ColorWheelPopover({ hex, onChange, onClose }) {
   const [h, s, l] = hexToHsl(hex);
   return (
     <div
-      className="absolute z-20 rounded-lg p-4"
-      style={{ background: '#1C1B1A', border: '1px solid rgba(176,141,87,0.4)', top: '48px', left: 0, boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}
+      className="absolute z-20 rounded-xl p-4"
+      style={{
+        ...frame,
+        boxShadow: `inset 0 0 0 3px ${T.bg}, inset 0 0 0 4px ${T.goldSoft}, 0 10px 28px rgba(0,0,0,0.55)`,
+        top: '48px', left: 0,
+      }}
     >
       <div className="flex items-center justify-between mb-3">
-        <p className="mono text-[10px] uppercase tracking-wide opacity-60">{hex.toUpperCase()}</p>
-        <button onClick={onClose} className="mono text-[10px] opacity-60">
+        <p className="caption text-[10px] uppercase" style={{ color: T.inkSoft }}>{hex.toUpperCase()}</p>
+        <button onClick={onClose} style={{ color: T.inkSoft }}>
           <X size={14} />
         </button>
       </div>
       <ColorWheel h={h} s={s} onPick={(nh, ns) => onChange(hslToHex(nh, ns, l))} />
       <div className="mt-4">
-        <div className="flex justify-between text-[10px] uppercase tracking-wide opacity-50 mb-1 mono">
+        <div className="flex justify-between text-[10px] uppercase mb-1 caption" style={{ color: T.inkSoft }}>
           <span>Lightness</span><span>{l}%</span>
         </div>
         <input
@@ -176,62 +166,6 @@ function ColorWheelPopover({ hex, onChange, onClose }) {
           style={{ background: `linear-gradient(to right, #000, ${hslToHex(h, s, 50)}, #fff)` }}
         />
       </div>
-    </div>
-  );
-}
-
-function SgTool() {
-  const [dry, setDry] = useState('');
-  const [water, setWater] = useState('');
-  const sg = parseFloat(dry) / parseFloat(water);
-  const valid = dry && water && !isNaN(sg) && isFinite(sg);
-  const matches = valid ? nearestSgMatches(sg) : [];
-
-  return (
-    <div className="rounded-lg p-4 mb-6" style={{ background: 'rgba(176,141,87,0.06)', border: '1px solid rgba(176,141,87,0.25)' }}>
-      <div className="flex items-center justify-between mb-3">
-        <p className="mono text-[11px] uppercase tracking-wider" style={{ color: '#B08D57' }}>Specific Gravity — quick check</p>
-        <p className="mono text-[10px] opacity-40">more gemology tools soon</p>
-      </div>
-      <div className="flex items-end gap-3">
-        <div className="flex-1">
-          <p className="mono text-[10px] opacity-50 mb-1">Dry weight (g)</p>
-          <input
-            value={dry}
-            onChange={e => setDry(e.target.value)}
-            placeholder="3.48"
-            inputMode="decimal"
-            className="w-full px-3 py-2 rounded text-sm mono"
-            style={{ background: 'rgba(242,237,228,0.06)', border: '1px solid rgba(242,237,228,0.15)', color: '#F2EDE4' }}
-          />
-        </div>
-        <p className="mono text-sm opacity-40 pb-2">÷</p>
-        <div className="flex-1">
-          <p className="mono text-[10px] opacity-50 mb-1">Water displacement (g)</p>
-          <input
-            value={water}
-            onChange={e => setWater(e.target.value)}
-            placeholder="0.49"
-            inputMode="decimal"
-            className="w-full px-3 py-2 rounded text-sm mono"
-            style={{ background: 'rgba(242,237,228,0.06)', border: '1px solid rgba(242,237,228,0.15)', color: '#F2EDE4' }}
-          />
-        </div>
-        <div className="pb-2 mono text-sm opacity-40">=</div>
-        <div className="pb-1 min-w-[60px]">
-          <p className="mono text-lg" style={{ color: valid ? '#B08D57' : 'rgba(242,237,228,0.3)' }}>
-            {valid ? sg.toFixed(2) : '—'}
-          </p>
-        </div>
-      </div>
-      {valid && matches.length > 0 && (
-        <p className="mono text-xs opacity-60 mt-3">
-          Close to: {matches.map(m => `${m.name} (${m.sg})`).join(', ')}
-        </p>
-      )}
-      {valid && matches.length === 0 && (
-        <p className="mono text-xs opacity-40 mt-3">No close match in the reference table — worth double-checking the reading.</p>
-      )}
     </div>
   );
 }
@@ -246,9 +180,11 @@ function HardnessScale({ value, onChange, editable }) {
           disabled={!editable}
           onClick={() => onChange && onChange(m.n)}
           title={`${m.n} — ${m.name}`}
-          className={`h-4 flex-1 rounded-[2px] transition-colors ${editable ? 'cursor-pointer' : 'cursor-default'}`}
+          className={`h-4 flex-1 transition-colors ${editable ? 'cursor-pointer' : 'cursor-default'}`}
           style={{
-            background: value && m.n <= value ? '#B08D57' : 'rgba(242,237,228,0.12)',
+            background: value && m.n <= value ? T.gold : T.goldFaint,
+            border: `1px solid ${value && m.n <= value ? T.gold : T.goldSoft}`,
+            borderRadius: m.n === 1 ? '99px 2px 2px 99px' : m.n === 10 ? '2px 99px 99px 2px' : '2px',
           }}
         />
       ))}
@@ -281,7 +217,11 @@ function ColorCircles({ colors, onChange }) {
             type="button"
             onClick={() => setOpenIdx(openIdx === i ? null : i)}
             className="w-10 h-10 rounded-full"
-            style={{ background: c, border: openIdx === i ? '2px solid #B08D57' : '2px solid rgba(242,237,228,0.25)' }}
+            style={{
+              background: c,
+              border: openIdx === i ? `2px solid ${T.gold}` : `2px solid ${T.goldLine}`,
+              boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}`,
+            }}
             title="Tap to change color"
           />
           {colors.length > 1 && (
@@ -289,7 +229,7 @@ function ColorCircles({ colors, onChange }) {
               type="button"
               onClick={() => removeAt(i)}
               className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center"
-              style={{ background: '#1C1B1A', border: '1px solid rgba(242,237,228,0.3)' }}
+              style={{ background: T.bg, border: `1px solid ${T.goldLine}`, color: T.ink }}
             >
               <X size={9} />
             </button>
@@ -308,9 +248,9 @@ function ColorCircles({ colors, onChange }) {
           type="button"
           onClick={addColor}
           className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ border: '1px dashed rgba(242,237,228,0.3)' }}
+          style={{ border: `1px dashed ${T.goldLine}`, color: T.inkSoft }}
         >
-          <Plus size={16} className="opacity-60" />
+          <Plus size={16} />
         </button>
       )}
     </div>
@@ -328,6 +268,8 @@ const emptyGem = () => ({
   dims: '',
   origin: '',
   acquired: '',
+  uvIntensity: '',
+  uvColor: '',
   notes: '',
   photos: [],
   createdAt: new Date().toISOString(),
@@ -336,12 +278,11 @@ const emptyGem = () => ({
 export default function GemTracker() {
   const [gems, setGems] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [view, setView] = useState('grid'); // grid | detail | edit
+  const [view, setView] = useState('grid'); // grid | detail | edit | palette
   const [activeId, setActiveId] = useState(null);
   const [draft, setDraft] = useState(null);
   const [query, setQuery] = useState('');
   const [error, setError] = useState('');
-  const fileRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -416,112 +357,145 @@ export default function GemTracker() {
   const filtered = gems.filter(g => {
     const q = query.toLowerCase();
     if (!q) return true;
-    return [g.name, g.species, g.origin, g.notes].join(' ').toLowerCase().includes(q);
+    return [g.name, g.species, g.origin, g.notes, g.uvIntensity, g.uvColor].join(' ').toLowerCase().includes(q);
   });
 
-  const label = "block text-[11px] uppercase tracking-wider mb-1.5";
-  const labelStyle = { color: '#B08D57', fontFamily: 'ui-monospace, monospace', letterSpacing: '0.08em' };
-  const inputStyle = {
-    background: 'rgba(242,237,228,0.06)',
-    border: '1px solid rgba(242,237,228,0.15)',
-    color: '#F2EDE4',
-  };
+  const label = "caption block text-[11px] uppercase mb-1.5";
+  const labelStyle = { color: T.gold };
 
   return (
     <div
       className="min-h-screen w-full"
-      style={{ background: '#1C1B1A', color: '#F2EDE4', fontFamily: 'Georgia, "Source Serif Pro", serif' }}
+      style={{
+        background: pageBackground,
+        color: T.ink,
+        fontFamily: FONT_BODY,
+        fontSize: '17px',
+      }}
     >
-      <style>{`
-        input, textarea { outline: none; }
-        input:focus, textarea:focus, button:focus-visible { box-shadow: 0 0 0 2px #B08D57; }
-        ::placeholder { color: rgba(242,237,228,0.35); }
-        .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
-        @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-      `}</style>
+      <style>{baseCss}</style>
 
       {!loaded ? (
-        <div className="p-8 text-center opacity-60 mono text-sm">loading specimens…</div>
+        <div className="p-8 text-center italic" style={{ color: T.inkSoft }}>unfurling the ledger…</div>
+      ) : view === 'palette' ? (
+        <PaletteSwatch onBack={() => setView('grid')} />
+      ) : view === 'gemology' ? (
+        <Gemology onBack={() => setView('grid')} />
       ) : view === 'grid' ? (
-        <div className="max-w-5xl mx-auto px-5 py-8">
-          <div className="flex items-start justify-between mb-8 gap-4">
-            <div>
-              <h1 className="text-3xl" style={{ letterSpacing: '0.01em' }}>Specimen Ledger</h1>
-              <p className="mono text-xs mt-1 opacity-50">{gems.length} stone{gems.length === 1 ? '' : 's'} logged</p>
+        <div className="max-w-5xl mx-auto px-5 py-10">
+          <header className="relative text-center mb-8" style={{ padding: '46px 0 20px' }}>
+            <ArchCrown />
+            <div className="relative">
+              <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
+              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleBlue }}>
+                Specimen Ledger
+              </h1>
+              <Flourish />
+              <p className="caption text-[11px] uppercase mt-1" style={{ color: T.inkSoft }}>
+                {gems.length} stone{gems.length === 1 ? '' : 's'} inscribed herein
+              </p>
+              <div className="flex justify-center gap-6 mt-3">
+                <button
+                  onClick={() => setView('palette')}
+                  className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
+                  style={{ color: T.peacock, textUnderlineOffset: 3 }}
+                >
+                  <Palette size={13} /> Palette Swatch
+                </button>
+                <button
+                  onClick={() => setView('gemology')}
+                  className="caption inline-flex items-center gap-1.5 text-[11px] uppercase underline"
+                  style={{ color: T.peacock, textUnderlineOffset: 3 }}
+                >
+                  <FlaskConical size={13} /> Gemology Bench
+                </button>
+              </div>
             </div>
+          </header>
+
+          <div className="flex items-center gap-3 mb-6">
+            {gems.length > 0 ? (
+              <div className="relative flex-1">
+                <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: T.inkFaint }} />
+                <input
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Search by name, species, origin…"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-full text-sm"
+                  style={inputStyle}
+                />
+              </div>
+            ) : <div className="flex-1" />}
             <button
               onClick={startNew}
-              className="flex items-center gap-2 px-4 py-2.5 rounded mono text-sm shrink-0"
-              style={{ background: '#B08D57', color: '#1C1B1A' }}
+              className="caption flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] uppercase shrink-0"
+              style={{ background: T.teal, color: T.ink, border: `1px solid ${T.teal}`, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
             >
-              <Plus size={16} /> New entry
+              <Plus size={15} /> New entry
             </button>
           </div>
 
-          {gems.length > 0 && (
-            <div className="relative mb-6">
-              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-40" />
-              <input
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="Search by name, species, origin…"
-                className="w-full pl-9 pr-3 py-2.5 rounded text-sm mono"
-                style={inputStyle}
-              />
-            </div>
-          )}
-
-          {error && <div className="mb-4 text-xs mono" style={{ color: '#C0392B' }}>{error}</div>}
-
-          <SgTool />
+          {error && <div className="mb-4 text-sm italic" style={{ color: T.red }}>{error}</div>}
 
           {gems.length === 0 ? (
             <div
-              className="rounded-lg p-12 text-center mt-4"
-              style={{ border: '1px dashed rgba(242,237,228,0.2)' }}
+              className="rounded-xl p-12 text-center mt-4"
+              style={{ border: `1px dashed ${T.goldLine}` }}
             >
-              <p className="opacity-60 mb-4">No stones catalogued yet.</p>
-              <button onClick={startNew} className="mono text-sm underline" style={{ color: '#B08D57' }}>
+              <Flourish width={180} />
+              <p className="italic my-4" style={{ color: T.inkSoft }}>No stones catalogued yet.</p>
+              <button onClick={startNew} className="caption text-[12px] uppercase underline" style={{ color: T.gold }}>
                 Log your first specimen
               </button>
             </div>
           ) : filtered.length === 0 ? (
-            <p className="opacity-50 text-sm mono mt-8">No matches for "{query}".</p>
+            <p className="italic mt-8 text-center" style={{ color: T.inkSoft }}>No matches for “{query}”.</p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
               {filtered.map(g => (
                 <button
                   key={g.id}
                   onClick={() => openDetail(g.id)}
-                  className="text-left rounded-lg overflow-hidden group"
-                  style={{ background: 'rgba(242,237,228,0.04)', border: '1px solid rgba(242,237,228,0.1)' }}
+                  className="relative text-left rounded-xl group p-2 overflow-hidden"
+                  style={frame}
                 >
+                  <Corners />
+                  <VineEdge side="left" />
+                  <VineEdge side="right" />
                   <div
-                    className="h-28 flex items-center justify-center relative overflow-hidden"
-                    style={{ background: (g.photos && g.photos.length) ? '#000' : 'rgba(242,237,228,0.03)' }}
+                    className="h-32 flex items-center justify-center relative overflow-hidden"
+                    style={{
+                      ...arch,
+                      border: `1px solid ${T.goldLine}`,
+                      background: (g.photos && g.photos.length) ? '#0B0909' : T.goldFaint,
+                    }}
                   >
                     {(g.photos && g.photos.length) ? (
                       <img src={g.photos[0]} alt={g.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                     ) : (
-                      <div className="flex gap-1">
+                      <div className="flex gap-1.5">
                         {(g.colors || ['#3C6E8F']).slice(0, 3).map((c, i) => (
-                          <div key={i} className="w-6 h-6 rounded-full" style={{ background: c }} />
+                          <div key={i} className="w-6 h-6 rounded-full" style={{ background: c, border: `1px solid ${T.goldLine}` }} />
                         ))}
                       </div>
                     )}
                     {g.photos && g.photos.length > 1 && (
                       <span
-                        className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded mono text-[10px]"
-                        style={{ background: 'rgba(0,0,0,0.6)', color: '#F2EDE4' }}
+                        className="caption absolute bottom-1.5 right-3 px-2 py-0.5 rounded-full text-[10px]"
+                        style={{ background: 'rgba(0,0,0,0.6)', color: T.ink }}
                       >
                         {g.photos.length}
                       </span>
                     )}
                   </div>
-                  <div className="p-3">
-                    <p className="truncate" style={{ fontSize: '15px' }}>{g.name || 'Untitled'}</p>
-                    <p className="mono text-[10px] opacity-50 mt-0.5 truncate">{g.species || '—'}</p>
-                    <div className="mt-2">
+                  <div className="px-2 pt-3 pb-2 text-center">
+                    <p className="display truncate" style={{ fontSize: '18px' }}>{g.name || 'Untitled'}</p>
+                    <div className="mt-0.5">
+                      <SpeciesBand>
+                        <span className="caption text-[10px] uppercase truncate" style={{ color: T.inkSoft }}>{g.species || '—'}</span>
+                      </SpeciesBand>
+                    </div>
+                    <div className="mt-2.5">
                       <HardnessScale value={g.mohs} editable={false} />
                     </div>
                   </div>
@@ -529,96 +503,140 @@ export default function GemTracker() {
               ))}
             </div>
           )}
+
+          <div className="mt-12"><VineRule /></div>
         </div>
       ) : view === 'detail' && activeGem ? (
-        <div className="max-w-2xl mx-auto px-5 py-8">
-          <button onClick={() => setView('grid')} className="flex items-center gap-1 mono text-xs opacity-60 mb-6">
+        <div className="max-w-2xl mx-auto px-5 py-10">
+          <button onClick={() => setView('grid')} className="caption flex items-center gap-1 text-[11px] uppercase mb-6" style={{ color: T.inkSoft }}>
             <ChevronLeft size={14} /> Ledger
           </button>
 
           {(activeGem.photos && activeGem.photos.length) ? (
             <div className="mb-6">
-              <div className="rounded-lg overflow-hidden" style={{ border: '1px solid rgba(242,237,228,0.1)' }}>
-                <img src={activeGem.photos[0]} alt={activeGem.name} className="w-full h-64 object-cover" />
+              <div className="relative overflow-hidden p-2 rounded-xl" style={frame}>
+                <Corners />
+                <VineEdge side="left" />
+                <VineEdge side="right" />
+                <img src={activeGem.photos[0]} alt={activeGem.name} className="w-full h-64 object-cover" style={arch} />
+                <div className="relative text-center pt-4 pb-2 px-8">
+                  <h2 className="display" style={{ fontSize: '2rem', lineHeight: 1.2, color: T.titleBlue }}>{activeGem.name || 'Untitled'}</h2>
+                  {activeGem.species && (
+                    <div className="mt-1">
+                      <SpeciesBand>
+                        <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
+                      </SpeciesBand>
+                    </div>
+                  )}
+                  <div className="flex justify-center -space-x-1.5 mt-3">
+                    {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
+                      <div key={i} className="w-5 h-5 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
+                    ))}
+                  </div>
+                </div>
               </div>
               {activeGem.photos.length > 1 && (
                 <div className="flex gap-2 mt-2 overflow-x-auto pb-1">
                   {activeGem.photos.slice(1).map((p, i) => (
-                    <img key={i} src={p} alt="" className="w-16 h-16 object-cover rounded shrink-0" style={{ border: '1px solid rgba(242,237,228,0.15)' }} />
+                    <img key={i} src={p} alt="" className="w-16 h-16 object-cover rounded-lg shrink-0" style={{ border: `1px solid ${T.goldLine}` }} />
                   ))}
                 </div>
               )}
             </div>
           ) : (
-            <div className="rounded-lg overflow-hidden mb-6" style={{ border: '1px solid rgba(242,237,228,0.1)' }}>
-              <div className="w-full h-40 flex items-center justify-center gap-2" style={{ background: 'rgba(242,237,228,0.03)' }}>
-                {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
-                  <div key={i} className="w-12 h-12 rounded-full" style={{ background: c }} />
-                ))}
+            <div className="relative rounded-xl overflow-hidden mb-6 p-2" style={frame}>
+              <Corners />
+              <VineEdge side="left" />
+              <VineEdge side="right" />
+              <div className="w-full h-32 flex items-center justify-center" style={{ ...arch, background: T.goldFaint, border: `1px solid ${T.goldLine}` }}>
+                <svg width="22" height="30" viewBox="0 0 22 30" fill="none" aria-hidden="true">
+                  <path d="M11 2 L 20 15 L 11 28 L 2 15 Z" stroke={T.gold} strokeWidth="1" opacity="0.55" />
+                  <circle cx="11" cy="15" r="1.5" fill={T.gold} opacity="0.6" />
+                </svg>
+              </div>
+              <div className="relative text-center pt-4 pb-2 px-8">
+                <h2 className="display" style={{ fontSize: '2rem', lineHeight: 1.2, color: T.titleBlue }}>{activeGem.name || 'Untitled'}</h2>
+                {activeGem.species && (
+                  <div className="mt-1">
+                    <SpeciesBand>
+                      <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
+                    </SpeciesBand>
+                  </div>
+                )}
+                <div className="flex justify-center -space-x-1.5 mt-3">
+                  {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
+                    <div key={i} className="w-5 h-5 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
-          <div className="flex items-start justify-between mb-1">
-            <h2 className="text-3xl">{activeGem.name || 'Untitled'}</h2>
-            <div className="flex -space-x-1.5 shrink-0 mt-2">
-              {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
-                <div key={i} className="w-6 h-6 rounded-full" style={{ background: c, border: '1px solid rgba(242,237,228,0.3)' }} />
-              ))}
-            </div>
+          <div className="text-center mb-1">
+            <Flourish width={200} />
           </div>
-          {activeGem.species && <p className="mono text-sm opacity-50 italic mb-5">{activeGem.species}</p>}
 
-          <div className="mb-6">
+          <div className="mb-6 mt-4">
             <p style={labelStyle} className={label}>Hardness</p>
             <HardnessScale value={activeGem.mohs} editable={false} />
-            <p className="mono text-xs opacity-50 mt-1.5">{activeGem.mohs} — {MOHS_REF.find(m => m.n === activeGem.mohs)?.name}</p>
+            <p className="text-sm italic mt-1.5" style={{ color: T.inkSoft }}>{activeGem.mohs} — {MOHS_REF.find(m => m.n === activeGem.mohs)?.name}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-5 mb-6">
-            {activeGem.cut && <div><p style={labelStyle} className={label}>Cut / Form</p><p className="text-sm">{activeGem.cut}</p></div>}
-            {activeGem.weightCt && <div><p style={labelStyle} className={label}>Weight</p><p className="text-sm mono">{activeGem.weightCt} ct</p></div>}
-            {activeGem.dims && <div><p style={labelStyle} className={label}>Measurements</p><p className="text-sm mono">{activeGem.dims}</p></div>}
-            {activeGem.origin && <div><p style={labelStyle} className={label}>Origin</p><p className="text-sm">{activeGem.origin}</p></div>}
-            {activeGem.acquired && <div><p style={labelStyle} className={label}>Acquired</p><p className="text-sm mono">{activeGem.acquired}</p></div>}
+            {activeGem.cut && <div><p style={labelStyle} className={label}>Cut / Form</p><p className="text-base">{activeGem.cut}</p></div>}
+            {activeGem.weightCt && <div><p style={labelStyle} className={label}>Weight</p><p className="text-base">{activeGem.weightCt} ct</p></div>}
+            {activeGem.dims && <div><p style={labelStyle} className={label}>Measurements</p><p className="text-base">{activeGem.dims}</p></div>}
+            {activeGem.origin && <div><p style={labelStyle} className={label}>Origin</p><p className="text-base">{activeGem.origin}</p></div>}
+            {activeGem.acquired && <div><p style={labelStyle} className={label}>Acquired</p><p className="text-base">{activeGem.acquired}</p></div>}
+            {activeGem.uvIntensity && (
+              <div>
+                <p style={labelStyle} className={label}>UV — Longwave</p>
+                <p className="text-base">
+                  {activeGem.uvIntensity}
+                  {activeGem.uvIntensity !== 'Inert' && activeGem.uvColor ? ` — ${activeGem.uvColor}` : ''}
+                </p>
+              </div>
+            )}
           </div>
 
           {activeGem.notes && (
             <div className="mb-8">
               <p style={labelStyle} className={label}>Notes</p>
-              <p className="text-sm leading-relaxed opacity-90 whitespace-pre-wrap">{activeGem.notes}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(191,212,203,0.9)' }}>{activeGem.notes}</p>
             </div>
           )}
 
           <div className="flex gap-3">
             <button
               onClick={() => startEdit(activeGem)}
-              className="flex-1 py-2.5 rounded mono text-sm"
-              style={{ background: 'rgba(242,237,228,0.08)', border: '1px solid rgba(242,237,228,0.2)' }}
+              className="caption flex-1 py-2.5 rounded-full text-[12px] uppercase"
+              style={{ background: T.goldFaint, border: `1px solid ${T.goldLine}`, color: T.ink }}
             >
               Edit
             </button>
             <button
               onClick={() => deleteGem(activeGem.id)}
-              className="px-4 py-2.5 rounded mono text-sm flex items-center gap-2"
-              style={{ background: 'rgba(192,57,43,0.15)', color: '#E08A7D', border: '1px solid rgba(192,57,43,0.3)' }}
+              className="caption px-5 py-2.5 rounded-full text-[12px] uppercase flex items-center gap-2"
+              style={{ background: 'rgba(192,138,102,0.13)', color: T.red, border: '1px solid rgba(192,138,102,0.4)' }}
             >
               <Trash2 size={14} /> Delete
             </button>
           </div>
         </div>
       ) : view === 'edit' && draft ? (
-        <div className="max-w-2xl mx-auto px-5 py-8">
+        <div className="max-w-2xl mx-auto px-5 py-10">
           <button
             onClick={() => setView(gems.some(g => g.id === draft.id) ? 'detail' : 'grid')}
-            className="flex items-center gap-1 mono text-xs opacity-60 mb-6"
+            className="caption flex items-center gap-1 text-[11px] uppercase mb-6"
+            style={{ color: T.inkSoft }}
           >
             <ChevronLeft size={14} /> Cancel
           </button>
 
-          <h2 className="text-2xl mb-6">{gems.some(g => g.id === draft.id) ? 'Edit specimen' : 'New specimen'}</h2>
+          <h2 className="display mb-1" style={{ fontSize: '1.9rem' }}>{gems.some(g => g.id === draft.id) ? 'Edit specimen' : 'New specimen'}</h2>
+          <div className="mb-6"><Flourish width={180} /></div>
 
-          {error && <div className="mb-4 text-xs mono" style={{ color: '#C0392B' }}>{error}</div>}
+          {error && <div className="mb-4 text-sm italic" style={{ color: T.red }}>{error}</div>}
 
           <div className="mb-5">
             <input
@@ -631,12 +649,12 @@ export default function GemTracker() {
             />
             <div className="grid grid-cols-3 gap-2">
               {(draft.photos || []).map((p, i) => (
-                <div key={i} className="relative rounded-lg overflow-hidden" style={{ aspectRatio: '1', border: '1px solid rgba(242,237,228,0.15)' }}>
+                <div key={i} className="relative overflow-hidden" style={{ aspectRatio: '1', ...arch, border: `1px solid ${T.goldLine}` }}>
                   <img src={p} alt="" className="w-full h-full object-cover" />
                   <button
                     onClick={() => removePhotoAt(i)}
-                    className="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center"
-                    style={{ background: 'rgba(0,0,0,0.55)', color: '#F2EDE4' }}
+                    className="absolute top-2 right-1/2 translate-x-1/2 w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.55)', color: T.ink }}
                   >
                     <X size={11} />
                   </button>
@@ -644,15 +662,15 @@ export default function GemTracker() {
               ))}
               <label
                 htmlFor="gem-photo-input"
-                className="rounded-lg flex flex-col items-center justify-center cursor-pointer"
-                style={{ aspectRatio: '1', background: 'rgba(242,237,228,0.04)', border: '1px dashed rgba(242,237,228,0.25)' }}
+                className="flex flex-col items-center justify-center cursor-pointer"
+                style={{ aspectRatio: '1', ...arch, background: T.goldFaint, border: `1px dashed ${T.goldLine}` }}
               >
-                <Camera size={18} className="opacity-50 mb-1" />
-                <p className="mono text-[10px] opacity-50">Add photo</p>
+                <Camera size={18} className="mb-1" style={{ color: T.inkSoft }} />
+                <p className="caption text-[10px] uppercase" style={{ color: T.inkSoft }}>Add photo</p>
               </label>
             </div>
             {(draft.photos || []).length > 0 && (
-              <p className="mono text-[10px] opacity-40 mt-2">{draft.photos.length} photo{draft.photos.length === 1 ? '' : 's'} — first one is used as the cover</p>
+              <p className="text-sm italic mt-2" style={{ color: T.inkFaint }}>{draft.photos.length} photo{draft.photos.length === 1 ? '' : 's'} — first one is used as the cover</p>
             )}
           </div>
 
@@ -662,7 +680,7 @@ export default function GemTracker() {
               value={draft.name}
               onChange={e => setDraft(d => ({ ...d, name: e.target.value }))}
               placeholder="e.g. Blue Ceylon Sapphire"
-              className="w-full px-3 py-2.5 rounded text-base"
+              className="w-full px-3 py-2.5 rounded-lg text-base"
               style={inputStyle}
             />
           </div>
@@ -673,7 +691,7 @@ export default function GemTracker() {
               value={draft.species}
               onChange={e => setDraft(d => ({ ...d, species: e.target.value }))}
               placeholder="e.g. Corundum"
-              className="w-full px-3 py-2.5 rounded text-sm"
+              className="w-full px-3 py-2.5 rounded-lg text-sm"
               style={inputStyle}
             />
           </div>
@@ -692,31 +710,62 @@ export default function GemTracker() {
             <div>
               <p style={labelStyle} className={label}>Cut / Form</p>
               <input value={draft.cut} onChange={e => setDraft(d => ({ ...d, cut: e.target.value }))}
-                placeholder="Round brilliant" className="w-full px-3 py-2.5 rounded text-sm" style={inputStyle} />
+                placeholder="Round brilliant" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
             </div>
             <div>
               <p style={labelStyle} className={label}>Weight (ct)</p>
               <input value={draft.weightCt} onChange={e => setDraft(d => ({ ...d, weightCt: e.target.value }))}
-                placeholder="1.20" className="w-full px-3 py-2.5 rounded text-sm mono" style={inputStyle} />
+                placeholder="1.20" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
             </div>
           </div>
 
           <div className="mb-5">
             <p style={labelStyle} className={label}>Measurements</p>
             <input value={draft.dims} onChange={e => setDraft(d => ({ ...d, dims: e.target.value }))}
-              placeholder="6.5 x 4.8 x 3.1 mm" className="w-full px-3 py-2.5 rounded text-sm mono" style={inputStyle} />
+              placeholder="6.5 x 4.8 x 3.1 mm" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
+          </div>
+
+          <div className="mb-5">
+            <p style={labelStyle} className={label}>UV Fluorescence — Longwave (365 nm)</p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {UV_INTENSITIES.map(o => {
+                const active = draft.uvIntensity === o;
+                return (
+                  <button
+                    key={o}
+                    type="button"
+                    onClick={() => setDraft(d => ({ ...d, uvIntensity: active ? '' : o }))}
+                    className="caption px-4 py-1.5 rounded-full text-[11px] uppercase"
+                    style={active
+                      ? { background: T.gold, color: T.bg, border: `1px solid ${T.gold}` }
+                      : { background: T.goldFaint, color: T.inkSoft, border: `1px solid ${T.goldSoft}` }}
+                  >
+                    {o}
+                  </button>
+                );
+              })}
+            </div>
+            {draft.uvIntensity && draft.uvIntensity !== 'Inert' && (
+              <input
+                value={draft.uvColor || ''}
+                onChange={e => setDraft(d => ({ ...d, uvColor: e.target.value }))}
+                placeholder="Response color — e.g. chalky blue, strong red"
+                className="w-full px-3 py-2.5 rounded-lg text-sm"
+                style={inputStyle}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-5">
             <div>
               <p style={labelStyle} className={label}>Origin (believed)</p>
               <input value={draft.origin} onChange={e => setDraft(d => ({ ...d, origin: e.target.value }))}
-                placeholder="Sri Lanka" className="w-full px-3 py-2.5 rounded text-sm" style={inputStyle} />
+                placeholder="Sri Lanka" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
             </div>
             <div>
               <p style={labelStyle} className={label}>Acquired</p>
               <input value={draft.acquired} onChange={e => setDraft(d => ({ ...d, acquired: e.target.value }))}
-                placeholder="July 2026" className="w-full px-3 py-2.5 rounded text-sm mono" style={inputStyle} />
+                placeholder="July 2026" className="w-full px-3 py-2.5 rounded-lg text-sm" style={inputStyle} />
             </div>
           </div>
 
@@ -727,15 +776,15 @@ export default function GemTracker() {
               onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))}
               placeholder="Inclusions, treatment, provenance, setting plans…"
               rows={4}
-              className="w-full px-3 py-2.5 rounded text-sm leading-relaxed"
+              className="w-full px-3 py-2.5 rounded-lg text-sm leading-relaxed"
               style={inputStyle}
             />
           </div>
 
           <button
             onClick={saveDraft}
-            className="w-full py-3 rounded mono text-sm"
-            style={{ background: '#B08D57', color: '#1C1B1A' }}
+            className="caption w-full py-3 rounded-full text-[13px] uppercase"
+            style={{ background: T.teal, color: T.ink, boxShadow: `0 0 0 2px ${T.bg}, 0 0 0 3px ${T.goldSoft}` }}
           >
             Save specimen
           </button>
