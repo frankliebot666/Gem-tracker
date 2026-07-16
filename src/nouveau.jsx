@@ -20,7 +20,7 @@ export const T = {
   teal: '#2E6E6A',
   peacock: '#6FA89F',
   chartreuse: '#8FA858',
-  red: '#D98873',
+  red: '#C08A66',
 };
 
 export const FONT_DISPLAY = '"Cinzel Decorative", "Cormorant Garamond", Georgia, serif';
@@ -120,6 +120,74 @@ export function Corners() {
       <Curl style={{ top: 4, left: 4 }} />
       <Curl style={{ bottom: 4, right: 4, transform: 'rotate(180deg)' }} />
     </>
+  );
+}
+
+// Climbing vine for a panel's vertical edge: winding stem, leaves turned
+// different ways, a bud, a spiral foot, and a Klimt cluster of dots.
+// Stretches to the panel's height (curves flex with it — they're vines).
+export function VineEdge({ side = 'left' }) {
+  return (
+    <svg
+      width="26" height="100%" viewBox="0 0 26 220" preserveAspectRatio="none" fill="none" aria-hidden="true"
+      style={{
+        position: 'absolute', top: 0, bottom: 0, pointerEvents: 'none',
+        ...(side === 'left' ? { left: 2 } : { right: 2, transform: 'scaleX(-1)' }),
+      }}
+    >
+      <path d="M13 0 C 4 28, 21 54, 10 84 C 2 108, 19 138, 9 168 C 4 188, 15 204, 12 220"
+        stroke={T.gold} strokeWidth="1" opacity="0.5" />
+      <path d="M11 50 C 16 41, 23 38, 26 42 C 21 49, 13 53, 11 50 Z" fill={T.gold} opacity="0.24" />
+      <path d="M12 118 C 6 111, 5 103, 9 100 C 14 106, 14 114, 12 118 Z" fill={T.gold} opacity="0.19" />
+      <path d="M10 172 C 15 164, 22 161, 25 165 C 20 171, 12 175, 10 172 Z" fill={T.gold} opacity="0.22" />
+      <circle cx="9" cy="85" r="1.8" fill={T.gold} opacity="0.5" />
+      <path d="M9 85 C 3 80, 2 73, 6 71" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
+      <path d="M12 204 C 5 208, 5 216, 10 217 C 14 217.8, 15 212, 11 211"
+        stroke={T.gold} strokeWidth="0.9" opacity="0.6" />
+      <circle cx="17" cy="18" r="1.1" fill={T.gold} opacity="0.35" />
+      <circle cx="20" cy="24" r="1.1" fill={T.gold} opacity="0.3" />
+      <circle cx="15" cy="28" r="1.1" fill={T.gold} opacity="0.25" />
+    </svg>
+  );
+}
+
+// Species/family line woven into the frame: whiplash tendrils reach in
+// from both sides toward the text
+export function SpeciesBand({ children }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, maxWidth: '100%' }}>
+      <svg width="44" height="12" viewBox="0 0 44 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <path d="M1 9 C 12 2, 24 10, 43 6" stroke={T.gold} strokeWidth="0.9" opacity="0.55" />
+        <path d="M20 7 C 25 3, 31 2, 34 4 C 30 8, 23 9.5, 20 7 Z" fill={T.gold} opacity="0.2" />
+        <circle cx="1.6" cy="9" r="1.4" fill={T.gold} opacity="0.5" />
+      </svg>
+      {children}
+      <svg width="44" height="12" viewBox="0 0 44 12" fill="none" aria-hidden="true" style={{ flexShrink: 0, transform: 'scaleX(-1)' }}>
+        <path d="M1 9 C 12 2, 24 10, 43 6" stroke={T.gold} strokeWidth="0.9" opacity="0.55" />
+        <path d="M20 7 C 25 3, 31 2, 34 4 C 30 8, 23 9.5, 20 7 Z" fill={T.gold} opacity="0.2" />
+        <circle cx="1.6" cy="9" r="1.4" fill={T.gold} opacity="0.5" />
+      </svg>
+    </span>
+  );
+}
+
+// Tall vine spray for flanking the page header — long whiplash stem
+// curling into a spiral crown, with leaves and a Klimt dot trail
+export function VineSpray({ style, flip = false }) {
+  return (
+    <svg width="110" height="190" viewBox="0 0 110 190" fill="none" aria-hidden="true"
+      style={{ position: 'absolute', pointerEvents: 'none', ...(flip ? { transform: 'scaleX(-1)' } : {}), ...style }}>
+      <path d="M18 190 C 8 150, 30 122, 22 88 C 15 60, 38 34, 66 26 C 88 20, 100 30, 98 42 C 96 54, 82 56, 78 46 C 75 39, 82 33, 88 37"
+        stroke={T.gold} strokeWidth="1" opacity="0.5" />
+      <path d="M22 88 C 34 80, 48 79, 54 84 C 45 92, 30 94, 22 88 Z" fill={T.gold} opacity="0.2" />
+      <path d="M20 140 C 10 132, 8 122, 13 118 C 20 125, 21 134, 20 140 Z" fill={T.gold} opacity="0.17" />
+      <path d="M52 34 C 58 24, 68 20, 74 23 C 68 31, 57 36, 52 34 Z" fill={T.gold} opacity="0.22" />
+      <circle cx="30" cy="62" r="1.9" fill={T.gold} opacity="0.45" />
+      <path d="M30 62 C 24 56, 24 49, 29 47" stroke={T.gold} strokeWidth="0.8" opacity="0.38" />
+      <circle cx="42" cy="110" r="1.1" fill={T.gold} opacity="0.32" />
+      <circle cx="46" cy="117" r="1.1" fill={T.gold} opacity="0.27" />
+      <circle cx="40" cy="121" r="1.1" fill={T.gold} opacity="0.22" />
+    </svg>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, X, Camera, Trash2, Search, ChevronLeft, Palette, FlaskConical } from 'lucide-react';
 import PaletteSwatch from './PaletteSwatch.jsx';
 import Gemology from './Gemology.jsx';
-import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, Halo, Corners } from './nouveau.jsx';
+import { T, frame, arch, inputStyle, baseCss, pageBackground, FONT_BODY, Flourish, VineRule, Halo, Corners, VineEdge, SpeciesBand, VineSpray } from './nouveau.jsx';
 
 const MOHS_REF = [
   { n: 1, name: 'Talc' }, { n: 2, name: 'Gypsum' }, { n: 3, name: 'Calcite' },
@@ -385,6 +385,8 @@ export default function GemTracker() {
         <div className="max-w-5xl mx-auto px-5 py-10">
           <header className="relative text-center mb-8" style={{ padding: '38px 0 26px' }}>
             <Halo />
+            <VineSpray style={{ left: '3%', top: 18 }} />
+            <VineSpray style={{ right: '3%', top: 34 }} flip />
             <div className="relative">
               <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
               <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleBlue }}>
@@ -456,10 +458,12 @@ export default function GemTracker() {
                 <button
                   key={g.id}
                   onClick={() => openDetail(g.id)}
-                  className="relative text-left rounded-xl group p-2"
+                  className="relative text-left rounded-xl group p-2 overflow-hidden"
                   style={frame}
                 >
                   <Corners />
+                  <VineEdge side="left" />
+                  <VineEdge side="right" />
                   <div
                     className="h-32 flex items-center justify-center relative overflow-hidden"
                     style={{
@@ -488,7 +492,11 @@ export default function GemTracker() {
                   </div>
                   <div className="px-2 pt-3 pb-2 text-center">
                     <p className="display truncate" style={{ fontSize: '18px' }}>{g.name || 'Untitled'}</p>
-                    <p className="caption text-[10px] uppercase mt-0.5 truncate" style={{ color: T.inkSoft }}>{g.species || '—'}</p>
+                    <div className="mt-0.5">
+                      <SpeciesBand>
+                        <span className="caption text-[10px] uppercase truncate" style={{ color: T.inkSoft }}>{g.species || '—'}</span>
+                      </SpeciesBand>
+                    </div>
                     <div className="mt-2.5">
                       <HardnessScale value={g.mohs} editable={false} />
                     </div>
@@ -510,6 +518,8 @@ export default function GemTracker() {
             <div className="mb-6">
               <div className="relative overflow-hidden p-2 rounded-xl" style={frame}>
                 <Corners />
+                <VineEdge side="left" />
+                <VineEdge side="right" />
                 <img src={activeGem.photos[0]} alt={activeGem.name} className="w-full h-64 object-cover" style={arch} />
               </div>
               {activeGem.photos.length > 1 && (
@@ -523,6 +533,8 @@ export default function GemTracker() {
           ) : (
             <div className="relative rounded-xl overflow-hidden mb-6 p-2" style={frame}>
               <Corners />
+              <VineEdge side="left" />
+              <VineEdge side="right" />
               <div className="w-full h-40 flex items-center justify-center gap-2" style={{ ...arch, background: T.goldFaint, border: `1px solid ${T.goldLine}` }}>
                 {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
                   <div key={i} className="w-12 h-12 rounded-full" style={{ background: c, border: `1px solid ${T.goldLine}` }} />
@@ -533,7 +545,13 @@ export default function GemTracker() {
 
           <div className="text-center mb-1">
             <h2 className="display" style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>{activeGem.name || 'Untitled'}</h2>
-            {activeGem.species && <p className="italic mt-1" style={{ color: T.inkSoft }}>{activeGem.species}</p>}
+            {activeGem.species && (
+              <div className="mt-1">
+                <SpeciesBand>
+                  <span className="italic" style={{ color: T.inkSoft }}>{activeGem.species}</span>
+                </SpeciesBand>
+              </div>
+            )}
             <div className="flex justify-center -space-x-1.5 mt-3">
               {(activeGem.colors || ['#3C6E8F']).map((c, i) => (
                 <div key={i} className="w-6 h-6 rounded-full" style={{ background: c, border: `1.5px solid ${T.bg}`, boxShadow: `0 0 0 1px ${T.goldLine}` }} />
@@ -583,7 +601,7 @@ export default function GemTracker() {
             <button
               onClick={() => deleteGem(activeGem.id)}
               className="caption px-5 py-2.5 rounded-full text-[12px] uppercase flex items-center gap-2"
-              style={{ background: 'rgba(217,136,115,0.12)', color: T.red, border: '1px solid rgba(217,136,115,0.35)' }}
+              style={{ background: 'rgba(192,138,102,0.13)', color: T.red, border: '1px solid rgba(192,138,102,0.4)' }}
             >
               <Trash2 size={14} /> Delete
             </button>
