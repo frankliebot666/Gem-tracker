@@ -96,6 +96,14 @@ export function ArchCrown({ width = 560, height = 150 }) {
       <path d="M540 148 C 549 143, 556 148, 553 155 C 551 159.5, 545 158, 546.2 153 C 546.9 150.3, 550.2 150.8, 549.4 153.5" stroke={T.gold} strokeWidth="0.9" opacity="0.6" />
       <path d="M280 26 L 285.5 33 L 280 40 L 274.5 33 Z" stroke={T.gold} strokeWidth="1" opacity="0.6" />
       <circle cx="280" cy="33" r="1.3" fill={T.gold} opacity="0.7" />
+      <g fill={T.gold}>
+        <rect x="4" y="128" width="6" height="6" opacity="0.7" />
+        <rect x="13" y="128" width="6" height="6" opacity="0.3" />
+        <rect x="22" y="128" width="6" height="6" opacity="0.7" />
+        <rect x="532" y="128" width="6" height="6" opacity="0.7" />
+        <rect x="541" y="128" width="6" height="6" opacity="0.3" />
+        <rect x="550" y="128" width="6" height="6" opacity="0.7" />
+      </g>
     </svg>
   );
 }
@@ -137,9 +145,12 @@ export function VineEdge({ side = 'left' }) {
       <path d="M8 220 L 8 58 C 8 38, 10 26, 17 17 C 21.5 11.5, 21 4, 14.5 4.5 C 10 5, 9.5 11, 14 12 C 17 12.6, 18.5 9.8, 16.8 7.6"
         stroke={T.gold} strokeWidth="1" opacity="0.55" />
       <path d="M13 220 L 13 66 C 13 48, 14.5 36, 20 28" stroke={T.gold} strokeWidth="0.6" opacity="0.28" />
-      <rect x="6.2" y="118" width="4" height="4" fill={T.gold} opacity="0.35" />
-      <rect x="6.2" y="126" width="4" height="4" fill={T.gold} opacity="0.22" />
-      <rect x="6.2" y="134" width="4" height="4" fill={T.gold} opacity="0.12" />
+      <rect x="4.5" y="104" width="7" height="7" fill={T.gold} opacity="0.75" />
+      <rect x="4.5" y="115" width="7" height="7" fill={T.gold} opacity="0.3" />
+      <rect x="4.5" y="126" width="7" height="7" fill={T.gold} opacity="0.75" />
+      <rect x="4.5" y="137" width="7" height="7" fill={T.gold} opacity="0.3" />
+      <rect x="4.5" y="148" width="7" height="7" fill={T.gold} opacity="0.75" />
+      <rect x="4.5" y="159" width="7" height="7" fill={T.gold} opacity="0.3" />
       <circle cx="8" cy="90" r="1.3" fill={T.gold} opacity="0.4" />
       <path d="M8 220 C 8 211, 2.5 209.5, 2 215" stroke={T.gold} strokeWidth="0.8" opacity="0.4" />
     </svg>
