@@ -23,6 +23,7 @@ export const T = {
   red: '#C08A66',
 };
 
+export const FONT_HEADER = '"Rivanna NF", "Cinzel Decorative", Georgia, serif';
 export const FONT_DISPLAY = '"Cinzel Decorative", "Cormorant Garamond", Georgia, serif';
 export const FONT_BODY = '"Cormorant Garamond", Georgia, "Source Serif Pro", serif';
 
@@ -49,6 +50,7 @@ export const baseCss = `
   ::selection { background: rgba(176,141,87,0.45); }
   .caption { font-family: ${FONT_BODY}; font-weight: 600; letter-spacing: 0.14em; }
   .display { font-family: ${FONT_DISPLAY}; font-weight: 400; letter-spacing: 0.05em; }
+  .masthead { font-family: ${FONT_HEADER}; font-weight: 400; letter-spacing: 0.06em; }
   input[type="range"] { -webkit-appearance: none; height: 5px; border-radius: 3px; }
   input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: ${T.ink}; cursor: pointer; border: 2px solid ${T.gold}; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

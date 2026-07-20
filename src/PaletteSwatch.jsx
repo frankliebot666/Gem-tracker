@@ -323,7 +323,7 @@ export default function PaletteSwatch({ onBack }) {
       )}
 
       <header className="text-center mb-6">
-        <h1 className="display" style={{ fontSize: 'clamp(1.9rem, 5vw, 2.4rem)', lineHeight: 1.15 }}>Palette Swatch</h1>
+        <h1 className="masthead" style={{ fontSize: 'clamp(2.1rem, 5.5vw, 2.7rem)', lineHeight: 1.12 }}>Palette Swatch</h1>
         <Flourish width={200} />
         <p className="text-sm italic mt-1" style={{ color: T.inkSoft }}>
           tap a color below to select it · use the wheel + slider to dial it in

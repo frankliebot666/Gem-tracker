@@ -129,7 +129,7 @@ export default function Gemology({ onBack }) {
       )}
 
       <header className="text-center mb-8">
-        <h1 className="display" style={{ fontSize: 'clamp(1.9rem, 5vw, 2.4rem)', lineHeight: 1.15 }}>Gemology Bench</h1>
+        <h1 className="masthead" style={{ fontSize: 'clamp(2.1rem, 5.5vw, 2.7rem)', lineHeight: 1.12 }}>Gemology Bench</h1>
         <Flourish width={200} />
         <p className="caption text-[11px] uppercase mt-1" style={{ color: T.inkSoft }}>tools of the trade — more soon</p>
       </header>

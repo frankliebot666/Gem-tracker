@@ -387,7 +387,7 @@ export default function GemTracker() {
             <ArchCrown />
             <div className="relative">
               <p className="caption text-[11px] uppercase" style={{ color: T.chartreuse }}>A Collection of Curious Stones</p>
-              <h1 className="display" style={{ fontSize: 'clamp(2.2rem, 6vw, 3rem)', lineHeight: 1.15, margin: '2px 0 4px', color: T.titleBlue }}>
+              <h1 className="masthead" style={{ fontSize: 'clamp(2.4rem, 6.5vw, 3.4rem)', lineHeight: 1.12, margin: '2px 0 4px', color: T.titleBlue }}>
                 Specimen Ledger
               </h1>
               <Flourish />
